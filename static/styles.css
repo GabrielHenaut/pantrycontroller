@@ -1,0 +1,126 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+main .form-control
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+
+
+}
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* Center contents */
+    text-align: center;
+
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
+
+tr:nth-child(even) {
+    background: #a5b6ed
+
+}
+
+tr:nth-child(odd) {
+    background: #88a0ec
+
+}
+
+#index-table-red:nth-child(even) {
+    background: #EC3E3E;
+
+}
+
+#index-table-red:nth-child(odd) {
+    background: #CA0000;
+
+}
+
+thead, tr {
+    border-top: 2px solid #858686;
+    border-bottom: 2px solid #858686;
+}
+
+td {
+    padding: 15px;
+}
+
+table {
+    width: 1000px;
+    max-width: 100%;
+    opacity: 20;
+}
+
+th {
+    background: #fff;
+}
+
+#index_table {
+    padding-top: 2rem;
+    padding-bottom: 10rem;
+}
+
+#spacer {
+    padding-top: 20rem;
+    padding-bottom: 10rem;
+}
+
+@media only screen and (max-width: 600px) {
+    #spacer {
+        padding-top: 7rem;
+        padding-bottom: 2rem;
+    }
+}
+
+
+
+.h4 {
+    margin-bottom: 10rem;
+}
+
+#search-bar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+#buttons {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.form-control {
+    margin-bottom: 0.5rem;
+}

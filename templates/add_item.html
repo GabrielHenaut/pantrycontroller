@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add Itens
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row justify-content-center" id="spacer">
+            <div class="justify-content-top">
+                <form action="/add_item" method="post">
+                    <div id="inputs">
+                        <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Name" id="name" type="text">
+                        <input autocomplete="off" autofocus class="form-control" name="amount" placeholder="Amount" type="text">
+                        <select name="unit" class="form-control" id="sel1">
+                            <option>Kg</option>
+                            <option>mL</option>
+                            <option>Units</option>
+                            <option>Boxes</option>
+                        </select>
+                        <input autocomplete="off" autofocus class="form-control" name="expiration" placeholder="Expiration date" type="date">
+                        <select name="type" class="form-control" id="sel1">
+                            <option value="" selected disabled>Type</option>
+                            <option>Fruits</option>
+                            <option>Legumes</option>
+                            <option>Dairy</option>
+                            <option>Meats</option>
+                            <option>Pantry</option>
+                            <option>Condiments</option>
+                            <option>Meals</option>
+                        </select>
+                    </div>
+                    <div id="buttons">
+                        <button id="add" class="btn btn-primary" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if storage != ""%}
+            <div id="index_table" class="row justify-content-center">
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Expiration Date</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+                        {% for row in storage %}
+                            <tr>
+                                <td id="{{row.item}}">{{row.item}}</td>
+                                <td>{{row.amount}} {{row.unit}}</td>
+                                <td>{{row.expiration}}</td>
+                                <td>{{row.type}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+        <!--</div>-->
+    </div>
+    <script>
+        $(document).ready(function(){
+            var itens=[];
+            function loadItens(){
+                $.getJSON('/itens', function(data, status, xhr){
+                    for (var i = 0; i < data.length; i++ ) {
+                        itens.push(data[i].item);
+                    }
+                });
+            };
+            loadItens();
+
+            $('#name').autocomplete({
+                source: itens,
+            });
+
+            $("#name").on("keyup", function(){
+                var typed = $("#name").val().toUpperCase()
+                for (let i = 0; i < itens.length; i++){
+                    if (!itens[i].toUpperCase().match(typed)){
+                        var tmp = ("#" + itens[i]).toLowerCase()
+                        var tmp2 = "#" + tmp.charAt(1).toUpperCase() + tmp.slice(2)
+                        $(tmp2).parent().hide()
+                    }
+                    else{
+                        var tmp = ("#" + itens[i]).toLowerCase()
+                        var tmp2 = "#" + tmp.charAt(1).toUpperCase() + tmp.slice(2)
+                        $(tmp2).parent().show()
+                    }
+                }
+            })
+        });
+    </script>
+{% endblock %}

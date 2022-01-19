@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Defautl Pantry
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+
+        {% if full_list != ""%}
+            <div class="row justify-content-center" id="spacer">
+                <form action="/list_download" method="post">
+                        <button class="btn btn-primary" type="submit">download</button>
+                </form>
+            </div>
+            <div id="index_table" class="row justify-content-center">
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+                        {% for row in full_list %}
+                            <tr>
+                                <td>{{row[0]}}</td>
+                                <td>{{row[1]}} {{row[2]}}</td>
+                                <td>{{row[3]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+        {% if full_list == "" %}
+            <p>you dont need anything</p>
+        {% endif %}
+
+    </div>
+{% endblock %}

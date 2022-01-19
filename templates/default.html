@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Defautl Pantry
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row justify-content-center" id="spacer">
+            <form action="/default" method="post">
+                    <input autocomplete="off" autofocus class="form-control" name="item" placeholder="Item" type="text">
+                    <input autocomplete="off"  class="form-control" name="amount" placeholder="Amount" type="text">
+                    <select name="unit" class="form-control" id="sel1">
+                        <option>Kg</option>
+                        <option>mL</option>
+                        <option>Units</option>
+                        <option>Boxes</option>
+                    </select>
+                    <select name="type" class="form-control" id="sel1">
+                        <option value="" selected disabled>Type</option>
+                        <option>Fruits</option>
+                        <option>Legumes</option>
+                        <option>Dairy</option>
+                        <option>Meats</option>
+                        <option>Pantry</option>
+                        <option>Condiments</option>
+                        <option>Meals</option>
+                    </select>
+                    <div id="buttons">
+                        <button class="btn btn-primary" name="action" id="add" value="add" type="submit">Add</button>
+                        <button class="btn btn-danger" name="action" id="x" value="x" type="submit">Remove</button>
+                    </div>
+            </form>
+        </div>
+        {% if storage != ""%}
+            <div id="index_table" class="row justify-content-center">
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>    </th>
+                    </tr>
+                    <tr id="test">
+                        {% for row in storage %}
+                            <tr>
+                                <td>{{row.item}}</td>
+                                <td>{{row.amount}} {{row.unit}}</td>
+                                <td>{{row.type}}</td>
+                                <td>
+                                    <button class="btn btn-danger" id="{{row.item}} {{row.unit}} {{row.type}}" type="submit">X</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    <script>
+
+        $(document).ready(function() {
+            $(document.body).on('click', 'button', function() {
+                console.log('button ' + this.id + ' clicked');
+
+                if (this.id.localeCompare("add") != 0 && this.id.localeCompare("x") != 0 && this.id.localeCompare("") != 0){
+                    var tmp = {"button": this.id}
+                    var tmp2 = "#" + this.id
+                    // $.ajax({
+                    //   type: "POST",
+                    //   url: "https://ide-b66a8bf6b5e44779b4051fd704bc6eba-8080.cs50.ws/remove_default/",
+                    //   data: tmp,
+                    // })
+                    $.ajax({
+                        type: 'POST',
+                        data: tmp,
+                        url: '/remove_default',
+                        success: function () {
+                            console.log("This is never getting printed!!")
+                            window.location.reload();
+                        }
+                    });
+                }
+
+            });
+
+            // $("#index_table").on("click", function(){
+            //     $("#index_table").hide()
+            // });
+        });
+
+    </script>
+{% endblock %}

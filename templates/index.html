@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Main Page
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div id="index_table" class="row justify-content-center">
+            <h4>Itens that are expiring</h4>
+            <br>
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Expiration Date</th>
+                    <th>Type</th>
+                </tr>
+                <tr>
+                    {% for row in expiring %}
+                        <tr id="index-table-red">
+                            <td>{{row.item}}</td>
+                            <td>{{row.amount}} {{row.unit}}</td>
+                            <td>{{row.expiration}}</td>
+                            <td>{{row.type}}</td>
+                        </tr>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+        <div>
+            <div>
+                <h4>Pantry</h4>
+            </div>
+            <div id="search-bar">
+                <input autocomplete="off" autofocus class="form-control" name="search" placeholder="Search" id="search" type="text">
+            </div>
+        </div>
+        <div id="index_table" class="row justify-content-center">
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Expiration Date</th>
+                    <th>Type</th>
+                </tr>
+                <tr>
+                    {% for row in storage %}
+                        <tr>
+                            <td id="{{row.item}}">{{row.item}}</td>
+                            <td>{{row.amount}} {{row.unit}}</td>
+                            <td>{{row.expiration}}</td>
+                            <td>{{row.type}}</td>
+                        </tr>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            var itens=[];
+            function loadItens(){
+                $.getJSON('/itens', function(data, status, xhr){
+                    for (var i = 0; i < data.length; i++ ) {
+                        itens.push(data[i].item);
+                    }
+                });
+            };
+            loadItens();
+
+
+            $("#search").on("keyup", function(){
+                var typed = $("#search").val().toUpperCase()
+                console.log(itens[0] + typed)
+                for (let i = 0; i < itens.length; i++){
+                    if (!itens[i].match(typed)){
+                        var tmp = ("#" + itens[i]).toLowerCase()
+                        var tmp2 = "#" + tmp.charAt(1).toUpperCase() + tmp.slice(2)
+                        $(tmp2).parent().hide()
+                    }
+                    else{
+                        var tmp = ("#" + itens[i]).toLowerCase()
+                        var tmp2 = "#" + tmp.charAt(1).toUpperCase() + tmp.slice(2)
+                        $(tmp2).parent().show()
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Remove Itens
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row justify-content-center" id="spacer">
+            <form action="/remove" method="post">
+                    <input autocomplete="off" id="name" autofocus class="form-control" name="item" placeholder="Item" type="text">
+                    <input autocomplete="off"  class="form-control" name="amount" placeholder="Amount" type="text">
+                    <div id="buttons">
+                        <button class="btn btn-primary" type="submit">Remove</button>
+                    </div>
+            </form>
+        </div>
+        <script>
+            $(document).ready(function(){
+                var itens=[];
+                function loadItens(){
+                    $.getJSON('/itens', function(data, status, xhr){
+                        for (var i = 0; i < data.length; i++ ) {
+                            itens.push(data[i].item);
+                        }
+                    });
+                };
+                loadItens();
+
+                $('#name').autocomplete({
+                    source: itens,
+                });
+
+
+            });
+        </script>
+    </div>
+{% endblock %}
