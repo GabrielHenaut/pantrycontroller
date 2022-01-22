@@ -4,6 +4,3 @@ Flask-Session
 requests
 gunicorn
 psycopg2
-tempfile
-werkzeug.security
-werkzeug.exceptions
