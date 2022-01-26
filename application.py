@@ -55,6 +55,7 @@ def index():
     for item in storage:
         item["item"] = item["item"].title()
         # expiration = datetime.strptime(item["expiration"], "%Y-%m-%d")
+        expiration = item["expiration"]
         today = datetime.today()
         if expiration < today.replace(today.year, today.month, today.day + 3):
             expiring.append(item)
