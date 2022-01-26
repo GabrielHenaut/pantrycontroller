@@ -11,9 +11,12 @@ from datetime import date, datetime
 
 from helpers import login_required
 
+
+
 # Configure application
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = "us=aAKSJDHG1*AJSF"
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -28,14 +31,12 @@ def after_request(response):
 
 
 
-
 # Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure CS50 Library to use SQLite database
 uri = os.getenv("DATABASE_URL")
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://")
@@ -61,9 +62,12 @@ def index():
 
     if len(storage) < 1:
         flash("added itens will show here", "warning")
-        return render_template("index.html")
+        return render_template("index.html", storage="", expiring="")
     else:
-        return render_template("index.html", storage=storage, expiring=expiring)
+        if len(expiring) < 1:
+            return render_template("index.html", storage=storage, expiring="")
+        else:
+            return render_template("index.html", storage=storage, expiring=expiring)
 
 
 @app.route('/itens')
@@ -115,7 +119,7 @@ def add_item():
             return redirect(request.url)
 
         # checks if the user has that item already
-        user = db.execute("SELECT item, amount FROM itens WHERE user_id=? AND item=?", session["user_id"], request.form.get("name").upper())
+        user = db.execute("SELECT item, amount FROM itens WHERE user_id=? AND item=? AND type=? AND unit=?", session["user_id"], request.form.get("name").upper(), request.form.get("type"), request.form.get("unit"))
         if len(user) < 1:
             db.execute("INSERT INTO itens (user_id ,item, amount, unit, expiration, type) VALUES(?, ?, ?, ?, ?, ?)", session["user_id"], request.form.get("name").upper(), request.form.get("amount"), request.form.get("unit"), request.form.get("expiration"), request.form.get("type"))
             flash("item added to pantry!", "success")
@@ -136,7 +140,7 @@ def add_item():
             expiration = datetime.strptime(item["expiration"], "%Y-%m-%d")
             item["expiration"] = (f"{expiration.month}/{expiration.day}/{expiration.year}")
         if len(storage) < 1:
-            return render_template("add_item.html")
+            return render_template("add_item.html", storage="")
         else:
             return render_template("add_item.html", storage=storage)
 

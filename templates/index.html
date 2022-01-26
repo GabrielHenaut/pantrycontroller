@@ -7,55 +7,60 @@
 {% block main %}
     <div class="container-fluid">
         <div id="index_table" class="row justify-content-center">
-            <h4>Itens that are expiring</h4>
-            <br>
-            <table>
-                <tr>
-                    <th>Item</th>
-                    <th>Amount</th>
-                    <th>Expiration Date</th>
-                    <th>Type</th>
-                </tr>
-                <tr>
-                    {% for row in expiring %}
-                        <tr id="index-table-red">
-                            <td>{{row.item}}</td>
-                            <td>{{row.amount}} {{row.unit}}</td>
-                            <td>{{row.expiration}}</td>
-                            <td>{{row.type}}</td>
-                        </tr>
-                    {% endfor %}
-                </tr>
-            </table>
+            {% if expiring != ""%}
+                <h4>Itens that are expiring</h4>
+                <br>
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Expiration Date</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+
+                        {% for row in expiring %}
+                            <tr id="index-table-red">
+                                <td>{{row.item}}</td>
+                                <td>{{row.amount}} {{row.unit}}</td>
+                                <td>{{row.expiration}}</td>
+                                <td>{{row.type}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% endif %}
         </div>
-        <div>
+        {% if storage != ""%}
             <div>
-                <h4>Pantry</h4>
+                <div>
+                    <h4>Pantry</h4>
+                </div>
+                <div id="search-bar">
+                    <input autocomplete="off"  class="form-control" name="search" placeholder="Search" id="search" type="text">
+                </div>
             </div>
-            <div id="search-bar">
-                <input autocomplete="off"  class="form-control" name="search" placeholder="Search" id="search" type="text">
+            <div id="index_table" class="row justify-content-center">
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Expiration Date</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+                        {% for row in storage %}
+                            <tr>
+                                <td id="{{row.item}}">{{row.item}}</td>
+                                <td>{{row.amount}} {{row.unit}}</td>
+                                <td>{{row.expiration}}</td>
+                                <td>{{row.type}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
             </div>
-        </div>
-        <div id="index_table" class="row justify-content-center">
-            <table>
-                <tr>
-                    <th>Item</th>
-                    <th>Amount</th>
-                    <th>Expiration Date</th>
-                    <th>Type</th>
-                </tr>
-                <tr>
-                    {% for row in storage %}
-                        <tr>
-                            <td id="{{row.item}}">{{row.item}}</td>
-                            <td>{{row.amount}} {{row.unit}}</td>
-                            <td>{{row.expiration}}</td>
-                            <td>{{row.type}}</td>
-                        </tr>
-                    {% endfor %}
-                </tr>
-            </table>
-        </div>
+        {% endif %}
     </div>
     <script>
         $(document).ready(function(){

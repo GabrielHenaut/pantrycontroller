@@ -1,2 +1,0 @@
-Remove tables from index and add_itens if no itens
-improve remove tab
