@@ -37,12 +37,12 @@ app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-uri = os.getenv("DATABASE_URL")
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://")
-db = SQL(uri)
+# uri = os.getenv("DATABASE_URL")
+# if uri.startswith("postgres://"):
+#     uri = uri.replace("postgres://", "postgresql://")
+# db = SQL(uri)
 
-# db = SQL("sqlite:///storage.db")
+db = SQL("sqlite:///storage.db")
 
 @app.route("/")
 @login_required
@@ -54,11 +54,12 @@ def index():
 
     for item in storage:
         item["item"] = item["item"].title()
-        print(item["expiration"])
         expiration = item["expiration"]
         today = datetime.today()
         day = timedelta(days=3)
         almost_expired = today + day
+        almost_expired.date()
+        print(type(almost_expired))
         if expiration < almost_expired:
             expiring.append(item)
         item["expiration"] = (f"{expiration.day}/{expiration.month}/{expiration.year}")
