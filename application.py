@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 import csv
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from helpers import login_required
 
@@ -54,10 +54,11 @@ def index():
 
     for item in storage:
         item["item"] = item["item"].title()
-        # expiration = datetime.strptime(item["expiration"], "%Y-%m-%d")
-        expiration = item["expiration"]
+        expiration = datetime.fromisoformat(item["expiration"])
         today = datetime.today()
-        if expiration < today.replace(today.year, today.month, today.day + 3):
+        day = timedelta(days=3)
+        almost_expired = today + day
+        if expiration < almost_expired:
             expiring.append(item)
         item["expiration"] = (f"{expiration.day}/{expiration.month}/{expiration.year}")
 
@@ -273,14 +274,14 @@ def remove():
 
         # checks if the user has enough of that item
         user = db.execute("SELECT item, amount FROM itens WHERE user_id=? AND item=?", session["user_id"], request.form.get("item").upper())
-        if len(user) < 1 or int(request.form.get("amount")) > user[0]["amount"]:
+        if len(user) < 1 or float(request.form.get("amount")) > user[0]["amount"]:
             flash("you don't have enough of this item", "warning")
             return redirect(request.url)
 
         # execute the removal
         else:
 
-            if (int(request.form.get("amount")) - user[0]["amount"]) == 0:
+            if (float(request.form.get("amount")) - user[0]["amount"]) == 0:
                 db.execute("DELETE FROM itens WHERE user_id=? AND item=?", session["user_id"], request.form.get("item").upper())
             else:
                 db.execute("UPDATE itens SET amount=? WHERE user_id=?", (user[0]["amount"] - float(request.form.get("amount"))), session["user_id"])
@@ -400,7 +401,7 @@ def shopping_list():
             if c_product["item"] == d_product["item"]:
                 has = True
                 if c_product["amount"] < d_product["amount"]:
-                    s_list.append(d_product["item"])
+                    s_list.append(d_product["item"].title())
                     s_list.append(d_product["amount"] - c_product["amount"])
                     s_list.append(d_product["unit"])
                     s_list.append(d_product["type"])
