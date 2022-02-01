@@ -54,7 +54,8 @@ def index():
 
     for item in storage:
         item["item"] = item["item"].title()
-        expiration = datetime.fromisoformat(item["expiration"])
+        print(item["expiration"])
+        expiration = item["expiration"]
         today = datetime.today()
         day = timedelta(days=3)
         almost_expired = today + day
