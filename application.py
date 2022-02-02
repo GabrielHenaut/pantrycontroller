@@ -37,12 +37,12 @@ app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# uri = os.getenv("DATABASE_URL")
-# if uri.startswith("postgres://"):
-#     uri = uri.replace("postgres://", "postgresql://")
-# db = SQL(uri)
+uri = os.getenv("DATABASE_URL")
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://")
+db = SQL(uri)
 
-db = SQL("sqlite:///storage.db")
+# db = SQL("sqlite:///storage.db")
 
 @app.route("/")
 @login_required
@@ -54,7 +54,7 @@ def index():
 
     for item in storage:
         item["item"] = item["item"].title()
-        expiration = item["expiration"]
+        expiration = datetime.fromisoformat(item["expiration"])
         today = datetime.today()
         day = timedelta(days=3)
         almost_expired = today + day
@@ -72,6 +72,8 @@ def index():
             return render_template("index.html", storage=storage, expiring="")
         else:
             return render_template("index.html", storage=storage, expiring=expiring)
+
+
 
 
 @app.route('/itens')
