@@ -105,6 +105,13 @@ th {
     }
 }
 
+@media only screen and (max-width: 1280px) {
+    #spacer {
+        padding-top: 8rem;
+        padding-bottom: 4rem;
+    }
+}
+
 
 
 .h4 {

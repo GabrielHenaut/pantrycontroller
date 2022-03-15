@@ -263,6 +263,10 @@ def remove():
             flash("please provide an amount", "danger")
             return redirect(request.url)
 
+        if not request.form.get("type"):
+            flash("Select a valid type", "warning")
+            return redirect(request.url)
+
         # ensure it is a valid symbol
         amount = request.form.get("amount")
         try:
@@ -272,12 +276,14 @@ def remove():
             return redirect(request.url)
 
 
+
+
         if float(amount) <= 0:
             flash("amount must be a positive number", "warning")
             return redirect(request.url)
 
         # checks if the user has enough of that item
-        user = db.execute("SELECT item, amount FROM itens WHERE user_id=? AND item=?", session["user_id"], request.form.get("item").upper())
+        user = db.execute("SELECT item, amount FROM itens WHERE user_id=? AND item=? AND type=? AND unit=?", session["user_id"], request.form.get("item").upper(), request.form.get("type"), request.form.get("unit"))
         if len(user) < 1 or float(request.form.get("amount")) > user[0]["amount"]:
             flash("you don't have enough of this item", "warning")
             return redirect(request.url)
@@ -286,9 +292,9 @@ def remove():
         else:
 
             if (float(request.form.get("amount")) - user[0]["amount"]) == 0:
-                db.execute("DELETE FROM itens WHERE user_id=? AND item=?", session["user_id"], request.form.get("item").upper())
+                db.execute("DELETE FROM itens WHERE user_id=? AND item=? AND type=? AND unit=?", session["user_id"], request.form.get("item").upper(), request.form.get("type"), request.form.get("unit"))
             else:
-                db.execute("UPDATE itens SET amount=? WHERE user_id=?", (user[0]["amount"] - float(request.form.get("amount"))), session["user_id"])
+                db.execute("UPDATE itens SET amount=? WHERE user_id=? AND item=? AND type=? AND unit=?", (user[0]["amount"] - float(request.form.get("amount"))), session["user_id"], request.form.get("item").upper(), request.form.get("type"), request.form.get("unit"))
 
             flash("item removed from pantry!", "success")
             return redirect(request.url)
@@ -321,6 +327,10 @@ def default():
         # ensure a amount is provided
         if not request.form.get("amount"):
             flash("must add an amount", "warning")
+            return redirect(request.url)
+
+        if not request.form.get("type"):
+            flash("Select a valid type", "warning")
             return redirect(request.url)
 
         if not request.form.get("type"):
@@ -373,7 +383,7 @@ def default():
         # gets all the necessery information
         storage = db.execute("SELECT item, amount, unit, type FROM default_pantry WHERE user_id=?", session["user_id"])
         if len(storage) < 1:
-            flash("Itens added will be shown here!", "warning")
+            flash("Add itens you'd like to always have available", "warning")
             return render_template("default.html", storage="")
         else:
             for item in storage:

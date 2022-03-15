@@ -10,8 +10,25 @@
             <form action="/remove" method="post">
                     <input autocomplete="off" id="name" autofocus class="form-control" name="item" placeholder="Item" type="text">
                     <input autocomplete="off"  class="form-control" name="amount" placeholder="Amount" type="text">
+                    <select name="unit" class="form-control" id="sel1">
+                        <option>Kg</option>
+                        <option>mL</option>
+                        <option>Units</option>
+                        <option>Boxes</option>
+                    </select>
+                    <select name="type" class="form-control" id="sel1">
+                        <option value="" selected disabled>Type</option>
+                        <option>Fruits</option>
+                        <option>Legumes</option>
+                        <option>Dairy</option>
+                        <option>Meats</option>
+                        <option>Pantry</option>
+                        <option>Condiments</option>
+                        <option>Meals</option>
+                        <option>Beverage</option>
+                    </select>
                     <div id="buttons">
-                        <button class="btn btn-primary" type="submit">Remove</button>
+                        <button class="btn btn-danger" type="submit">Remove</button>
                     </div>
             </form>
         </div>
