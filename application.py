@@ -143,6 +143,7 @@ def add_item():
         storage = db.execute("SELECT item, amount, unit, expiration, type FROM itens WHERE user_id=?", session["user_id"])
         for item in storage:
             item["item"] = item["item"].title()
+            str(item["expiration"])
             expiration = datetime.strptime(item["expiration"], "%Y-%m-%d")
             item["expiration"] = (f"{expiration.month}/{expiration.day}/{expiration.year}")
         if len(storage) < 1:
