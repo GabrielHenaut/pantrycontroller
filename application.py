@@ -37,12 +37,12 @@ app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-uri = os.getenv("DATABASE_URL")
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://")
-db = SQL(uri)
+# uri = os.getenv("DATABASE_URL")
+# if uri.startswith("postgres://"):
+#     uri = uri.replace("postgres://", "postgresql://")
+# db = SQL(uri)
 
-# db = SQL("sqlite:///storage.db")
+db = SQL("sqlite:///storage.db")
 
 @app.route("/")
 @login_required
@@ -294,7 +294,15 @@ def remove():
             return redirect(request.url)
 
     else:
-        return render_template("remove.html")
+        storage = db.execute("SELECT item, amount, unit, expiration, type FROM itens WHERE user_id=?", session["user_id"])
+        for item in storage:
+            item["item"] = item["item"].title()
+            expiration = datetime.strptime(item["expiration"], "%Y-%m-%d")
+            item["expiration"] = (f"{expiration.month}/{expiration.day}/{expiration.year}")
+        if len(storage) < 1:
+            return render_template("remove.html", storage="")
+        else:
+            return render_template("remove.html", storage=storage)
 
 
 

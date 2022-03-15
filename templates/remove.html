@@ -15,6 +15,28 @@
                     </div>
             </form>
         </div>
+        {% if storage != ""%}
+            <div id="index_table" class="row justify-content-center">
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Expiration Date</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+                        {% for row in storage %}
+                            <tr>
+                                <td id="{{row.item}}">{{row.item}}</td>
+                                <td>{{row.amount}} {{row.unit}}</td>
+                                <td>{{row.expiration}}</td>
+                                <td>{{row.type}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
         <script>
             $(document).ready(function(){
                 var itens=[];
@@ -31,7 +53,21 @@
                     source: itens,
                 });
 
-
+                $("#name").on("keyup", function(){
+                    var typed = $("#name").val().toUpperCase()
+                    for (let i = 0; i < itens.length; i++){
+                        if (!itens[i].toUpperCase().match(typed)){
+                            var tmp = ("#" + itens[i]).toLowerCase()
+                            var tmp2 = "#" + tmp.charAt(1).toUpperCase() + tmp.slice(2)
+                            $(tmp2).parent().hide()
+                        }
+                        else{
+                            var tmp = ("#" + itens[i]).toLowerCase()
+                            var tmp2 = "#" + tmp.charAt(1).toUpperCase() + tmp.slice(2)
+                            $(tmp2).parent().show()
+                        }
+                    }
+                })
             });
         </script>
     </div>
