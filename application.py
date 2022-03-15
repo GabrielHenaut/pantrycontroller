@@ -402,7 +402,8 @@ def remove_default():
     return jsonify({'success':True}), 200, {'ContentType':'application/json'}
 
 
-app.config["CLIENT_LIST"] = "/home/ubuntu/CS50x/final/pantry/static/client/"
+home = os.getenv("HOME")
+app.config["CLIENT_LIST"] = f"{home}/static/client/"
 
 
 @app.route("/shopping_list", methods=["GET"])
