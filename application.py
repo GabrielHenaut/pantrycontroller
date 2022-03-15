@@ -54,7 +54,7 @@ def index():
 
     for item in storage:
         item["item"] = item["item"].title()
-        expiration = datetime.fromisoformat(item["expiration"])
+        expiration = datetime.fromisoformat(str(item["expiration"]))
         today = datetime.today()
         day = timedelta(days=3)
         almost_expired = today + day
@@ -304,7 +304,7 @@ def remove():
         storage = db.execute("SELECT item, amount, unit, expiration, type FROM itens WHERE user_id=?", session["user_id"])
         for item in storage:
             item["item"] = item["item"].title()
-            expiration = datetime.strptime(item["expiration"], "%Y-%m-%d")
+            expiration = datetime.strptime(str(item["expiration"]), "%Y-%m-%d")
             item["expiration"] = (f"{expiration.month}/{expiration.day}/{expiration.year}")
         if len(storage) < 1:
             return render_template("remove.html", storage="")
